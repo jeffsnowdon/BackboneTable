@@ -1,15 +1,26 @@
 define(['jquery', 'underscore', 'backbone'], function ($, _, Backbone) {
     let RowModel = Backbone.Model.extend({
-        defaults : {
+        defaults: {
+            //<columnName, data>
+            data: {},
+            //columnIndexMapping
+            columnIndexMap: {},
             columnData: [],
             selected: false
         },
 
-        initialize: function(){
-            this.listenTo(this, "change", function(){
-                this.set("columnName", this.get('columnData')[0]);
-            });
-            this.set("columnName", this.get('columnData')[0]);
+        initialize: function () {
+        },
+
+        updateRenderableData: function () {
+            let columnData = [];
+            let data = this.get('data');
+            Object.keys(data).forEach(function (columnName) {
+                let index = this.get('columnIndexMap')[columnName];
+                let associatedData = data[columnName];
+                columnData.push(associatedData);
+            }, this);
+            this.set('columnData', columnData, {silent: true});
         },
 
         toggleSelected: function () {

@@ -19,6 +19,7 @@ define(['jquery', 'underscore', 'backbone', 'text!../../../tpl/rowView.html'], f
         },
 
         render: function () {
+            this.model.updateRenderableData();
             if (this.model.get('selected')) {
                 this.$el.addClass('selected');
             } else {

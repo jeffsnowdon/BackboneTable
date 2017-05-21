@@ -10,19 +10,22 @@ define(['jquery', 'underscore', 'backbone', 'text!../../../tpl/filterView.html']
             'input.change': 'filterChanged'
         },
 
-        filterChanged: function(e){
-            //columnName placeholder for testing
-            this.model.setFilter({"columnName": this.filterInputTextField.val()});
+        filterChanged: function (e) {
+            this.model.setFilter(this.filterInputTextField.val());
         },
 
         initialize: function () {
-            // this.listenTo(this.model, 'change', this.render);
-            
+            this.listenTo(this.model, 'change', this.render);
         },
 
         render: function () {
-            this.$el.html(this.template(this.model.attributes));
-            this.filterInputTextField = this.$("#filter");
+            if (!this.filterInputTextField){
+                this.$el.html(this.template(this.model.attributes));
+                this.filterInputTextField = this.$("#filter");    
+            }
+
+            this.filterInputTextField.val(this.model.get('filter'));
+            
             return this;
         }
     })

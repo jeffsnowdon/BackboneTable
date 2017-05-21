@@ -1,6 +1,14 @@
 define(['jquery', 'underscore', 'backbone', 'app/table/table-view', 'app/table/row-model', 'app/table/rows-collection', 'app/filter/filter-model', 'app/filter/filter-view'], function ($, _, Backbone, TableView, RowModel, RowsCollection, FilterModel, FilterView) {
 
-    let filterModel = new FilterModel();
+    let columnIndexMap = {
+        "Column1": 0,
+        "Column2": 1,
+        "Column3": 2
+    }
+
+    let filterModel = new FilterModel({
+        targetColumnNames: ["Column1", "Column2", "Column3"]
+    });
     let filterView = new FilterView({
         model: filterModel
     });
@@ -8,9 +16,15 @@ define(['jquery', 'underscore', 'backbone', 'app/table/table-view', 'app/table/r
 
     let rowsCollection = new RowsCollection({
         filterModel: filterModel,
+        columnIndexMap: columnIndexMap,
         data: {}
     });
-    rowsCollection['columnNames'] = ["Column 1", "Column 2", "Column 3"];
+
+    let columnNames = [];
+    Object.keys(columnIndexMap).forEach(function (columnName) {
+        columnNames.push(columnName);
+    })
+    rowsCollection['columnNames'] = columnNames;
 
     let tableView = new TableView({
         collection: rowsCollection
@@ -19,10 +33,10 @@ define(['jquery', 'underscore', 'backbone', 'app/table/table-view', 'app/table/r
 
 
 
-    let container = $("#container");
-    container.empty();
-    container.append(filterView.el);
-    container.append(tableView.el);
+    let appContainer = $("#appContainer");
+    appContainer.empty();
+    appContainer.append(filterView.el);
+    appContainer.append(tableView.el);
 
 
     let makeid = function () {
@@ -35,9 +49,14 @@ define(['jquery', 'underscore', 'backbone', 'app/table/table-view', 'app/table/r
         return text;
     }
     let rows = [];
-    for (let rowIndex = 0; rowIndex < 100; rowIndex++) {
+    for (let rowIndex = 0; rowIndex < 1000; rowIndex++) {
         let curRow = new RowModel({
-            columnData: [makeid(), makeid(), makeid()]
+            data: {
+                "Column1": makeid(),
+                "Column2": makeid(),
+                "Column3": makeid()
+            },
+            columnIndexMap: columnIndexMap
         });
         rows.push(curRow);
     }

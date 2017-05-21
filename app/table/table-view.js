@@ -8,12 +8,13 @@ define(['jquery', 'underscore', 'backbone', 'app/table/row-view'], function ($, 
         },
 
         initialize: function () {
-            this.listenTo(this.collection, "change add remove reset", function(){
+            this.listenTo(this.collection, "add remove reset", function(){
                 this.render();
             });
         },
 
         render: function () {
+            console.log("table render");
             this.$el.empty();
             //head
             let tableHeader = $("<thead>");
@@ -25,6 +26,12 @@ define(['jquery', 'underscore', 'backbone', 'app/table/row-view'], function ($, 
             tableHeader.html(tableHeaderStr);
             //body
             let tableBody = $("<tbody>");
+            let maxRowCount = Math.min(10, this.collection.length);
+            // for (let i=0;i<maxRowCount;i++){
+            //     let rowModel = this.collection.at(i);
+            //     var rowView = new RowView({ model: rowModel });
+            //     tableBody.append(rowView.render().el);
+            // }
             this.collection.each(function (rowModel) {
                 var rowView = new RowView({ model: rowModel });
                 tableBody.append(rowView.render().el);

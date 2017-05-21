@@ -10,6 +10,8 @@ define(['jquery', 'underscore', 'backbone', 'app/table/row-model'], function ($,
 
         initialize: function (attrs) {
             this.options = attrs;
+            this.filterModel = this.options.filterModel;
+            this.columnIndexMap = this.options.columnIndexMap;
             let data = this.options.data;
             // The initial data sent to collection will be saved
             if (data) {
@@ -27,8 +29,8 @@ define(['jquery', 'underscore', 'backbone', 'app/table/row-model'], function ($,
                 this._setTotalData();
             });
 
-            this.listenTo(this.options.filterModel, "change", function () {
-                this.applyFilter(this.options.filterModel.get('filter'));
+            this.listenTo(this.filterModel, "change", function () {
+                this.applyFilter(this.filterModel.get('filter'), this.filterModel.get('targetColumnNames'));
             })
         },
 
@@ -39,15 +41,26 @@ define(['jquery', 'underscore', 'backbone', 'app/table/row-model'], function ($,
         },
 
         // Apply a new filter to the collection
-        applyFilter: function (criteria) {
+        applyFilter: function (filter, columnNames) {
             // Clear the previous filter
             this.clearFilter();
 
             // Mark this as filtered
-            this._isFiltered = !!criteria;
+            this._isFiltered = !!filter;
             if (this._isFiltered) {
                 // Apply new filter
-                this.reset(this.where(criteria));
+                let filteredData = this.filter(function (row) {
+                    let result = false;
+                    for (var i = 0; i < columnNames.length; i++) {
+                        let columnName = columnNames[i];
+                        let dataForColumn = row.get('data')[columnName];
+                        if (dataForColumn && _.contains(dataForColumn, filter)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                });
+                this.reset(filteredData);
             }
         },
 
