@@ -1,24 +1,38 @@
 define(['jquery', 'underscore', 'backbone', 'app/table/row-model'], function ($, _, Backbone, RowModel) {
     let RowsCollection = Backbone.Collection.extend({
         model: RowModel,
-        _totalData: [],
+        _allRows: [],
         _isFiltered: false,
 
-        defaults: {
-            columnNames: []
+        comparator: function (a, b) {
+            let sortColumn = this.sortColumn;
+            if (!sortColumn) {
+                return 0;
+            }
+            let aVal = a.get('data')[sortColumn];
+            let bVal = b.get('data')[sortColumn];
+            if (!aVal || !bVal) {
+                if (!aVal)
+                    return 1
+                else
+                    return -1
+            }
+            return (aVal < bVal ? -1 : (aVal > bVal ? 1 : 0));
         },
 
         initialize: function (attrs) {
+            this.applyFilter = _.debounce(this.applyFilter, 500);
             this.options = attrs;
             this.filterModel = this.options.filterModel;
             this.columnIndexMap = this.options.columnIndexMap;
+            this.sortColumn = this.options.sortColumn ? this.options.sortColumn : null;
             let data = this.options.data;
             // The initial data sent to collection will be saved
             if (data) {
                 this._setTotalData(data);
             }
 
-            // Data updates should reflect in _totalData
+            // Data updates should reflect in _allRows
             this.listenTo(this, 'add', function () {
                 this._setTotalData();
             });
@@ -37,7 +51,7 @@ define(['jquery', 'underscore', 'backbone', 'app/table/row-model'], function ($,
         // Every time new data has been added to the collection
         _setTotalData: function (data) {
             if (!this._isFiltered)
-                this._totalData = data || this.toJSON();
+                this._allRows = this.models;
         },
 
         // Apply a new filter to the collection
@@ -70,7 +84,7 @@ define(['jquery', 'underscore', 'backbone', 'app/table/row-model'], function ($,
             // has the original data
             if (this._isFiltered) {
                 // Reset the collection with complete data set
-                this.reset(this._totalData);
+                this.reset(this._allRows);
                 this._isFiltered = false;
             }
         }

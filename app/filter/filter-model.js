@@ -2,7 +2,8 @@ define(['jquery', 'underscore', 'backbone'], function ($, _, Backbone) {
     let FilterModel = Backbone.Model.extend({
         defaults : {
             filter: '',
-            targetColumnNames: []
+            targetColumnNames: [],
+            placeholder: ""
         },
 
         setFilter: function(filter){

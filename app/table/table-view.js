@@ -14,7 +14,6 @@ define(['jquery', 'underscore', 'backbone', 'app/table/row-view'], function ($, 
         },
 
         render: function () {
-            console.log("table render");
             this.$el.empty();
             //head
             let tableHeader = $("<thead>");
@@ -40,8 +39,12 @@ define(['jquery', 'underscore', 'backbone', 'app/table/row-view'], function ($, 
             this.$el.append(tableBody);
             return this;
 
+        },
+        
+        getSelectedRows: function(){
+            return this.collection.where({selected: true});
         }
-    })
+    });
 
     return TableView;
 });

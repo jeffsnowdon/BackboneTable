@@ -7,7 +7,8 @@ define(['jquery', 'underscore', 'backbone', 'app/table/table-view', 'app/table/r
     }
 
     let filterModel = new FilterModel({
-        targetColumnNames: ["Column1", "Column2", "Column3"]
+        targetColumnNames: ["Column1", "Column2", "Column3"],
+        placeHolder: "Filter by any column..."
     });
     let filterView = new FilterView({
         model: filterModel
