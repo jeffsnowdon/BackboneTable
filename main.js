@@ -2,10 +2,10 @@ require.config({
     baseUrl: 'lib',
     paths: {
         app: '../app',
-        jquery: 'jquery/jquery',
+        jquery: 'jquery/dist/jquery',
         underscore: 'underscore/underscore',
         backbone: 'backbone/backbone',
-        text: 'text/text'
+        text: 'requirejs-text/text'
     },
     shim: {
         // backbone file here is a non-AMD file
