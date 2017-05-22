@@ -63,5 +63,13 @@ define(['jquery', 'underscore', 'backbone', 'app/table/table-view', 'app/table/r
     }
     rowsCollection.reset(rows);
 
+    // window.setInterval(function(){
+    //     let selectedRows = rowsCollection.where({
+    //         selected: true
+    //     });
+    //     console.log('selected rows count: '+selectedRows.length);
+    //     if (selectedRows.length > 0)
+    //         console.log('first selected row: '+selectedRows[0].get('data')['Column1']);
+    // }, 1000);
 
 });
