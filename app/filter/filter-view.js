@@ -4,7 +4,7 @@ define(['jquery', 'underscore', 'backbone', 'text!../../../tpl/filterView.html']
 
         tagName: 'form',
 
-        className: 'bb-filter',
+        className: 'bb-filter-container',
 
         events: {
             'input.change': 'filterChanged'

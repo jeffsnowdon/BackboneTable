@@ -1,8 +1,8 @@
 define(['jquery', 'underscore', 'backbone', 'app/table/row-view'], function ($, _, Backbone, RowView) {
     let TableView = Backbone.View.extend({
-        tagName: "table",
+        tagName: "div",
 
-        className: "bb-table",
+        className: "bb-table-container",
 
         events: {
             'click th': 'sort'
@@ -62,8 +62,12 @@ define(['jquery', 'underscore', 'backbone', 'app/table/row-view'], function ($, 
                 var rowView = new RowView({ model: rowModel });
                 tableBody.append(rowView.render().el);
             }, this);
-            this.$el.append(tableHeader);
-            this.$el.append(tableBody);
+
+            let tableElement = $("<table>");
+            tableElement.append(tableHeader);
+            tableElement.append(tableBody);
+
+            this.$el.append(tableElement);
 
             
 
