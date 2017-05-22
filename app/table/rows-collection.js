@@ -19,10 +19,10 @@ define(['jquery', 'underscore', 'backbone', 'app/table/row-model'], function ($,
                 else
                     return this.applyAscending(-1);
             }
-            if (aVal < bVal){
+            if (aVal.localeCompare(bVal) == -1){
                 return this.applyAscending(-1);
-            } else if(aVal > bVal){
-                return this.applyAscending(1)
+            } else if(aVal.localeCompare(bVal) == 1){
+                return this.applyAscending(1);
             } else{
                 //they are equal
                 //use row ID's instead for consistent sorting
