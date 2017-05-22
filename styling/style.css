@@ -22,9 +22,6 @@ html {
     padding: 3px 10px;
 }
  table thead th {
-    background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #8C8C8C), color-stop(1, #7D7D7D));
-    background: -moz-linear-gradient( center top, #8C8C8C 5%, #7D7D7D 100%);
-    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#8C8C8C', endColorstr='#7D7D7D');
     background-color: #8C8C8C;
     color: #FFFFFF;
     font-size: 13px;
@@ -109,4 +106,40 @@ tr:hover {
     width: 500px;
     height: 500px;
     overflow: auto;
+}
+
+th a,
+td a { 
+	display: block;
+	width: 100%;
+}
+th a.sort { 
+	position: relative;
+}
+a.sort:before,
+a.sort:after {
+	border: 4px solid transparent;
+	content: "";
+	display: block;
+	height: 0;
+	right: 5px;
+	top: 50%;
+	position: absolute;
+	width: 0;
+}
+a.sort-ascending:before {
+	border-bottom-color: #666;
+	margin-top: -9px;
+}
+a.sort-ascending:after {
+	border-top-color: rgba(0,0,0,0);
+	margin-top: 1px;
+}
+a.sort-descending:before {
+	border-bottom-color: rgba(0,0,0,0);
+	margin-top: -9px;
+}
+a.sort-descending:after {
+	border-top-color: #666;
+	margin-top: 1px;
 }

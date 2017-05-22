@@ -106,6 +106,7 @@ define(['jquery', 'underscore', 'backbone', 'app/table/row-model'], function ($,
             //new column
             else {
                 this.sortColumn = sortColumn;
+                this.sortAscending = true;
             }
             this.sort();
         },
