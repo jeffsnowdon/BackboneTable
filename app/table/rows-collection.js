@@ -3,21 +3,42 @@ define(['jquery', 'underscore', 'backbone', 'app/table/row-model'], function ($,
         model: RowModel,
         _allRows: [],
         _isFiltered: false,
+        sortColumn: null,
+        sortAscending: true,
 
         comparator: function (a, b) {
             let sortColumn = this.sortColumn;
             if (!sortColumn) {
-                return 0;
+                return this.sortByRowID(a, b);
             }
             let aVal = a.get('data')[sortColumn];
             let bVal = b.get('data')[sortColumn];
             if (!aVal || !bVal) {
                 if (!aVal)
-                    return 1
+                    return this.applyAscending(1);
                 else
-                    return -1
+                    return this.applyAscending(-1);
             }
-            return (aVal < bVal ? -1 : (aVal > bVal ? 1 : 0));
+            if (aVal < bVal){
+                return this.applyAscending(-1);
+            } else if(aVal > bVal){
+                return this.applyAscending(1)
+            } else{
+                //they are equal
+                //use row ID's instead for consistent sorting
+                return this.sortByRowID(a, b);
+            }
+        },
+
+        sortByRowID: function(a, b){
+            return a.cid < b.cid ? -1 : (a.cid > b.cid ? 1 : 0);
+        },
+
+        applyAscending: function (sortValue) {
+            if (this.sortAscending || sortValue == 0)
+                return sortValue;
+            return sortValue == -1 ? 1 : -1;
+
         },
 
         initialize: function (attrs) {
@@ -76,6 +97,17 @@ define(['jquery', 'underscore', 'backbone', 'app/table/row-model'], function ($,
                 });
                 this.reset(filteredData);
             }
+        },
+
+        toggleSortColumn: function (sortColumn) {
+            //column toggle
+            if (this.sortColumn == sortColumn)
+                this.sortAscending = !this.sortAscending;
+            //new column
+            else {
+                this.sortColumn = sortColumn;
+            }
+            this.sort();
         },
 
         // Clear all filters applied to this collection

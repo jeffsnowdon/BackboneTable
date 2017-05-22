@@ -5,10 +5,18 @@ define(['jquery', 'underscore', 'backbone', 'app/table/row-view'], function ($, 
         className: "bb-table",
 
         events: {
+            'click th': 'sort'
+        },
+
+        sort: function (e) {
+            let target = e.target;
+            let columnName = target.innerHTML;
+            if (columnName);
+                this.collection.toggleSortColumn(columnName);
         },
 
         initialize: function () {
-            this.listenTo(this.collection, "add remove reset", function(){
+            this.listenTo(this.collection, "add remove reset sort", function(){
                 this.render();
             });
         },
