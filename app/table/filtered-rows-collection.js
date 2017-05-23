@@ -4,10 +4,13 @@ define(['jquery', 'underscore', 'backbone', 'app/table/row-model'], function ($,
         rowsCollection: null,
         sortColumn: null,
         sortAscending: true,
+        filterModel: null,
+        paginationModel: null,
 
         initialize: function (attrs) {
             this.options = attrs;
             this.filterModel = this.options.filterModel;
+            this.paginationModel = this.options.paginationModel;
             this.sortColumn = this.options.sortColumn ? this.options.sortColumn : null;
             this.rowsCollection = this.options.rowsCollection;
 
@@ -17,6 +20,10 @@ define(['jquery', 'underscore', 'backbone', 'app/table/row-model'], function ($,
 
             this.listenTo(this.filterModel, "change", function () {
                 this.resetWithFilters();
+            }, this);
+
+            this.listenTo(this.paginationModel, "change", function () {
+                this.resetWithFilters();
             }, this)
         },
 
@@ -25,6 +32,8 @@ define(['jquery', 'underscore', 'backbone', 'app/table/row-model'], function ($,
          */
         resetWithFilters: function () {
             models = this.applyFilterToModels(this.rowsCollection.models);
+            models = this.applyPagination(models);
+            models = this.applySort(models);
             this.reset(models);
         },
         applyFilterToModels: function (models) {
@@ -52,9 +61,27 @@ define(['jquery', 'underscore', 'backbone', 'app/table/row-model'], function ($,
         },
 
         /**
+         * Pagination
+         */
+        applyPagination: function (models) {
+            let rowsPerPage = this.paginationModel.get('rowsPerPage');
+            let currentPageIndex = this.paginationModel.get('currentPageIndex');
+            if (rowsPerPage == -1 || currentPageIndex == -1 || models.length == 0) {
+                return models;
+            }
+            let modelIndexMin = Math.min(models.length - 1, rowsPerPage * currentPageIndex);
+            let modelIndexMax = modelIndexMin + rowsPerPage;
+            modelIndexMax = Math.min(models.length - 1, modelIndexMax);
+            return models.slice(modelIndexMin, modelIndexMax);
+        },
+
+        /**
          * Sort
          */
-        comparator: function (a, b) {
+        applySort: function(models){
+            return models.sort(_.bind(this.compareRows, this));
+        },
+        compareRows: function (a, b) {
             let sortColumn = this.sortColumn;
             if (!sortColumn) {
                 return this.sortByRowID(a, b);
@@ -95,7 +122,8 @@ define(['jquery', 'underscore', 'backbone', 'app/table/row-model'], function ($,
                 this.sortColumn = sortColumn;
                 this.sortAscending = true;
             }
-            this.sort();
+            // this.sort();
+            this.resetWithFilters();
         }
     });
 

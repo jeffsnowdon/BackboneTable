@@ -154,9 +154,19 @@ a.sort-descending:after {
 .bb-filter-container{
     height:10%;
     width:100%;
+    display: table;
+}
+.bb-pagination-container{
+    height:10%;
+    width:100%;
+    display: table;
 }
 .bb-table-container{
     overflow:auto;
-    height:90%;
+    height:80%;
     width:100%;
+}
+.bb-table-cell-center{
+    display: table-cell;
+    vertical-align: middle;
 }

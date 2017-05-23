@@ -11,7 +11,7 @@ define(['jquery', 'underscore', 'backbone', 'text!../../../tpl/filterView.html']
         },
 
         filterChanged: function (e) {
-            this.model.setFilter(this.filterInputTextField.val());
+            this.model.set('filter', this.filterInputTextField.val());
         },
 
         initialize: function () {

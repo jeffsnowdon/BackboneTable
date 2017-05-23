@@ -1,11 +1,9 @@
 define(['jquery', 'underscore', 'backbone'], function ($, _, Backbone) {
     let FilterModel = Backbone.Model.extend({
         defaults : {
-            filter: '',
-            targetColumnNames: [],
-            placeholder: ""
+            rowsPerPage: 100,
+            currentPageIndex: 0
         }
     });
-
     return FilterModel;
 });
