@@ -9,9 +9,6 @@ define(['jquery', 'underscore', 'backbone'], function ($, _, Backbone) {
             selected: false
         },
 
-        initialize: function () {
-        },
-
         updateRenderableData: function () {
             let columnData = [];
             let data = this.get('data');
