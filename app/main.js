@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'app/table/table-view', 'app/table/row-model', 'app/table/rows-collection', 'app/filter/filter-model', 'app/filter/filter-view'], function ($, _, Backbone, TableView, RowModel, RowsCollection, FilterModel, FilterView) {
+define(['jquery', 'underscore', 'backbone', 'app/table/table-view', 'app/table/row-model', 'app/table/rows-collection', 'app/table/filtered-rows-collection', 'app/filter/filter-model', 'app/filter/filter-view'], function ($, _, Backbone, TableView, RowModel, RowsCollection, FilteredRowsCollection, FilterModel, FilterView) {
 
     let columnIndexMap = {
         "Column1": 0,
@@ -16,19 +16,21 @@ define(['jquery', 'underscore', 'backbone', 'app/table/table-view', 'app/table/r
     filterView.render();
 
     let rowsCollection = new RowsCollection({
+    });
+
+    let filteredRowsCollection = new FilteredRowsCollection({
         filterModel: filterModel,
-        columnIndexMap: columnIndexMap,
-        data: {}
+        rowsCollection: rowsCollection
     });
 
     let columnNames = [];
     Object.keys(columnIndexMap).forEach(function (columnName) {
         columnNames.push(columnName);
     })
-    rowsCollection['columnNames'] = columnNames;
+    filteredRowsCollection['columnNames'] = columnNames;
 
     let tableView = new TableView({
-        collection: rowsCollection
+        collection: filteredRowsCollection
     });
     tableView.render();
 
@@ -50,7 +52,7 @@ define(['jquery', 'underscore', 'backbone', 'app/table/table-view', 'app/table/r
         return text;
     }
     let rows = [];
-    for (let rowIndex = 0; rowIndex < 1000; rowIndex++) {
+    for (let rowIndex = 0; rowIndex < 3; rowIndex++) {
         let curRow = new RowModel({
             data: {
                 "Column1": makeid(),
@@ -63,6 +65,7 @@ define(['jquery', 'underscore', 'backbone', 'app/table/table-view', 'app/table/r
     }
     rowsCollection.reset(rows);
 
+    //GET SELECTED ROWS
     // window.setInterval(function(){
     //     let selectedRows = rowsCollection.where({
     //         selected: true
@@ -71,5 +74,48 @@ define(['jquery', 'underscore', 'backbone', 'app/table/table-view', 'app/table/r
     //     if (selectedRows.length > 0)
     //         console.log('first selected row: '+selectedRows[0].get('data')['Column1']);
     // }, 1000);
+
+    //RESET DATA
+    // window.setTimeout(function () {
+    //     console.log("Update data");
+    //     let rows = [];
+    //     for (let rowIndex = 0; rowIndex < 1000; rowIndex++) {
+    //         let curRow = new RowModel({
+    //             data: {
+    //                 "Column1": makeid(),
+    //                 "Column2": makeid(),
+    //                 "Column3": makeid()
+    //             },
+    //             columnIndexMap: columnIndexMap
+    //         });
+    //         rows.push(curRow);
+    //     }
+    //     rowsCollection.reset(rows);
+    // }, 10000);
+    //ADD DATA
+    window.setInterval(function () {
+        console.log("Add data");
+        let curRow = new RowModel({
+            data: {
+                "Column1": makeid(),
+                "Column2": makeid(),
+                "Column3": makeid()
+            },
+            columnIndexMap: columnIndexMap
+        });
+        // let rows = [];
+        // for (let rowIndex = 0; rowIndex < 1000; rowIndex++) {
+        //     let curRow = new RowModel({
+        //         data: {
+        //             "Column1": makeid(),
+        //             "Column2": makeid(),
+        //             "Column3": makeid()
+        //         },
+        //         columnIndexMap: columnIndexMap
+        //     });
+        //     rows.push(curRow);
+        // }
+        rowsCollection.add(curRow);
+    }, 5000);
 
 });
