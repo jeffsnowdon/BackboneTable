@@ -7,33 +7,60 @@ define(['jquery', 'underscore', 'backbone', 'text!../../../tpl/PaginationView.ht
         className: 'bb-pagination-container',
 
         events: {
-            'input.change': 'pageChanged'
+            'click button': 'buttonClicked'
         },
 
-        pageChanged: function (e) {
-            let page = 0;
-            try {
-                page = parseInt(this.pageInputTextField.val());
-                if (isNaN(page) || !page){
-                    page = 0;
+        buttonClicked: function (e) {
+            let button = e.target;
+            let buttonText = button.innerHTML;
+            if (buttonText === "Next") {
+                this.model.nextPage();
+            } else if (buttonText === "Prev") {
+                this.model.prevPage();
+            } else {
+                let pageNumStr = button.innerHTML;
+                let pageNum = parseInt(pageNumStr);
+                if (!pageNum || isNaN(pageNum)) {
+                    console.log('Error parsing page number');
+                    return;
                 }
-            } catch (e) {
-                console.log('unable to parse page');
+                this.model.set('currentPageIndex', pageNum);
             }
-            this.model.set('currentPageIndex', page);
         },
 
-        initialize: function () {
+        initialize: function (options) {
+            this.filteredRowsCollection = options.filteredRowsCollection;
             this.listenTo(this.model, 'change', this.render);
+            this.listenTo(this.filteredRowsCollection, 'add remove reset update', function(){
+                this.model.set('numPages', this.filteredRowsCollection.calculateNumPages());
+                this.render();
+            }, this);
         },
 
         render: function () {
-            if (!this.pageInputTextField) {
-                this.$el.html(this.template(this.model.attributes));
-                this.pageInputTextField = this.$("#page");
-            }
+            this.$el.empty();
 
-            this.pageInputTextField.val(this.model.get('currentPageIndex'));
+            let numPages = this.model.get('numPages');
+            let currentPageIndex = this.model.get('currentPageIndex');
+
+            let currentPageBlock = $('<span class="bb-current-page">');
+            let prevPageBlock = $('<button type="button">');
+            let nextPageBlock = $('<button type="button">');
+
+
+            currentPageBlock.text(currentPageIndex);
+            prevPageBlock.text('Prev');
+            nextPageBlock.text('Next');
+
+            this.$el.append(prevPageBlock);
+            this.$el.append(currentPageBlock);
+            this.$el.append(nextPageBlock);
+
+            if (currentPageIndex <= 0)
+                prevPageBlock.attr('disabled', true);
+            if (numPages <= (currentPageIndex + 1)){
+                nextPageBlock.attr('disabled', true);
+            }
 
             return this;
         }

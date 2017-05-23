@@ -32,8 +32,8 @@ define(['jquery', 'underscore', 'backbone', 'app/table/row-model'], function ($,
          */
         resetWithFilters: function () {
             models = this.applyFilterToModels(this.rowsCollection.models);
-            models = this.applyPagination(models);
             models = this.applySort(models);
+            models = this.applyPagination(models);
             this.reset(models);
         },
         applyFilterToModels: function (models) {
@@ -73,6 +73,11 @@ define(['jquery', 'underscore', 'backbone', 'app/table/row-model'], function ($,
             let modelIndexMax = modelIndexMin + rowsPerPage;
             modelIndexMax = Math.min(models.length - 1, modelIndexMax);
             return models.slice(modelIndexMin, modelIndexMax);
+        },
+        calculateNumPages: function(){
+            let models = this.applyFilterToModels(this.rowsCollection.models);
+            let rowsPerPage = this.paginationModel.get('rowsPerPage');
+            return Math.ceil(models.length / rowsPerPage);
         },
 
         /**

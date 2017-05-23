@@ -18,10 +18,6 @@ define(['jquery', 'underscore', 'backbone', 'app/table/table-view', 'app/table/r
     let paginationModel = new PaginationModel({
         rowsPerPage: 100
     });
-    let paginationView = new PaginationView({
-        model: paginationModel
-    });
-    paginationView.render();
 
     let rowsCollection = new RowsCollection({
     });
@@ -31,6 +27,12 @@ define(['jquery', 'underscore', 'backbone', 'app/table/table-view', 'app/table/r
         paginationModel: paginationModel,
         rowsCollection: rowsCollection
     });
+
+    let paginationView = new PaginationView({
+        model: paginationModel,
+        filteredRowsCollection: filteredRowsCollection
+    });
+    paginationView.render();
 
     let columnNames = [];
     Object.keys(columnIndexMap).forEach(function (columnName) {

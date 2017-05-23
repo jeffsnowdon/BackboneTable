@@ -170,3 +170,6 @@ a.sort-descending:after {
     display: table-cell;
     vertical-align: middle;
 }
+.bb-current-page{
+    padding: 5px;
+}
