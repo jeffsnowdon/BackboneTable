@@ -52,9 +52,13 @@ define(['jquery', 'underscore', 'backbone', 'text!../../../tpl/PaginationView.ht
             prevPageBlock.text('Prev');
             nextPageBlock.text('Next');
 
-            this.$el.append(prevPageBlock);
-            this.$el.append(currentPageBlock);
-            this.$el.append(nextPageBlock);
+            let centeredContainer = $('<div class="bb-table-cell-center">');
+
+            centeredContainer.append(prevPageBlock);
+            centeredContainer.append(currentPageBlock);
+            centeredContainer.append(nextPageBlock);
+
+            this.$el.append(centeredContainer);
 
             if (currentPageIndex <= 0)
                 prevPageBlock.attr('disabled', true);
